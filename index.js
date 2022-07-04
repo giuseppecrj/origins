@@ -34,7 +34,7 @@ class App {
     let middlewares = [require("./api")];
 
     if (process.env.FIREBASE_CONFIG) {
-      middlewares.push(require("helmet")());
+      middlewares.push(require("helmet")(options.helmet || {}));
 
       let origin = true;
       middlewares.push(require("cors")({ origin, optionsSuccessStatus: 200 }));
