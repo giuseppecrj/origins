@@ -91,14 +91,14 @@ class App {
                 routePath,
                 this.validate[route],
                 validationMiddleware,
-                asyncMiddleware(this[route])
+                asyncMiddleware(this[route].bind(this))
               )
             );
           else if (route.includes(":"))
-            app.use(`/${route}`, asyncMiddleware(this[route]));
+            app.use(`/${route}`, asyncMiddleware(this[route].bind(this)));
           else
             methods.forEach((routePath) =>
-              app.use(routePath, asyncMiddleware(this[route]))
+              app.use(routePath, asyncMiddleware(this[route].bind(this)))
             );
         }
       });
@@ -113,10 +113,10 @@ class App {
             ["/*"],
             this.validate[method],
             validationMiddleware,
-            asyncMiddleware(this[method])
+            asyncMiddleware(this[method].bind(this))
           );
         else if (this[method])
-          app[method](["/*"], asyncMiddleware(this[method]));
+          app[method](["/*"], asyncMiddleware(this[method].bind(this)));
       } else {
         let methods = [`/${params.join("/")}`, "/"];
         if (validate && this[method])
@@ -125,12 +125,12 @@ class App {
               routePath,
               this.validate[method],
               validationMiddleware,
-              asyncMiddleware(this[method])
+              asyncMiddleware(this[method].bind(this))
             )
           );
         else if (this[method])
           methods.forEach((routePath) =>
-            app[method](routePath, asyncMiddleware(this[method]))
+            app[method](routePath, asyncMiddleware(this[method].bind(this)))
           );
       }
     });
