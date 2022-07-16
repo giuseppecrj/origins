@@ -110,13 +110,13 @@ class App {
       if (options.root || this.constructor.name === "Root") {
         if (validate && this[method])
           app[method](
-            ["/*"],
+            ["/:id"],
             this.validate[method],
             validationMiddleware,
             asyncMiddleware(this[method].bind(this))
           );
         else if (this[method])
-          app[method](["/*"], asyncMiddleware(this[method].bind(this)));
+          app[method](["/:id"], asyncMiddleware(this[method].bind(this)));
       } else {
         let methods = [`/${params.join("/")}`, "/"];
         if (validate && this[method])
