@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { removeExtension, throwError } = require("./lo");
+const { removeExtension, throwError } = require("genart-lo");
 const {
   getInstanceMethodNames,
   getConstructorName,
