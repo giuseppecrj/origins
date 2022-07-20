@@ -19,21 +19,23 @@ function findServices({ services, prefix }) {
       else return -1;
     })
     .map((directory) => {
-      const route = require(_path.join(path, directory));
+      import(_path.join(path, directory, "index.js")).then(
+        ({ default: route }) => {
+          if (typeof route !== "function") {
+            if (route.socket) return;
+            let type = toString.call(route);
+            let msg = `Route.${directory}() requires a callback function but got ${type}`;
+            throw new Error(msg);
+          }
 
-      if (typeof route !== "function") {
-        if (route.socket) return;
-        let type = toString.call(route);
-        let msg = `Route.${directory}() requires a callback function but got ${type}`;
-        throw new Error(msg);
-      }
+          if (directory === "root") {
+            app.all("*", route);
+          }
 
-      if (directory === "root") {
-        app.all("*", route);
-      }
-
-      if (prefix) app.use(`/${prefix}/${directory}`, route);
-      else app.use(`/${directory}`, route);
+          if (prefix) app.use(`/${prefix}/${directory}`, route);
+          else app.use(`/${directory}`, route);
+        }
+      );
     });
 
   return app;
