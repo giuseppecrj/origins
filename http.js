@@ -21,6 +21,7 @@ function findServices({ services, prefix }) {
     .map((directory) => {
       import(_path.join(path, directory, "index.js")).then(
         ({ default: route }) => {
+          if (!route) return;
           if (typeof route !== "function") {
             if (route.socket) return;
             let type = toString.call(route);
